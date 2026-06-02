@@ -72,52 +72,6 @@ func HapusPencapaian(arr *[NMAX]pekerja, jumlah *int) {
 	*jumlah--
 }
 
-
-func DeletePencapaian(arr *[NMAX]pekerja, jumlah *int) {
-	if *jumlah == 0 {
-		fmt.Println("Belum ada data pencapaian")
-		return 
-	}
-	var nomor int
-	fmt.Print("Masukkan nomor pencapaian yang ingin dihapus: ")
-	fmt.Scan(&nomor)
-	if nomor < 1 || nomor > *jumlah {
-		fmt.Println("Nomor pencapaian tidak valid")
-		return 
-	}
-	
-	for i := nomor - 1; i < *jumlah-1; i++ {
-		arr[i] = arr[i+1]
-	}
-	
-	*jumlah--
-	arr[*jumlah] = pekerja{}
-	fmt.Println("Data berhasil dihapus")
-} 
-
-func CatatProgres(arr *[NMAX]pekerja, jumlah *int) {
-	if *jumlah == 0 {
-		fmt.Println("Belum ada data pencapaian")
-		return 
-	}
-	var nomor int
-	fmt.Print("Masukkan nomor pencapaian untuk dilihat progresnya: ")
-	fmt.Scan(&nomor)
-	if nomor < 1 || nomor > *jumlah {
-		fmt.Println("Nomor pencapaian tidak valid")
-		return 
-	}
-	
-	p := arr[nomor-1]
-	fmt.Println("\n--- Catatan Progres MindStone ---")
-	fmt.Printf("Pekerja           : %s\n", p.namaPekerja)
-	fmt.Printf("Tugas             : %s\n", p.namaTugas)
-	fmt.Printf("Deskripsi Progres : %s\n", p.progress)
-	fmt.Printf("Skor Tingkat Stres: %d/10\n", p.skorStress)
-	fmt.Printf("Catatan Perasaan  : %s\n", p.mood)
-	fmt.Println("---------------------------------")
-} 
-
 func main() {
 	var pilihan int
 	var data [NMAX]pekerja

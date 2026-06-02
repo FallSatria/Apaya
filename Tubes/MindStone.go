@@ -29,10 +29,11 @@ func OutputPencapaian(arr *[NMAX]pekerja, jumlah *int) {
 		return 
 	}
 	for i := 0; i < *jumlah; i++ {
-		fmt.Printf("Nama Pekerja: %s,", arr[i].namaPekerja)
-		fmt.Printf("Nama Tugas: %s,", arr[i].namaTugas)
-		fmt.Printf("Mood: %s,", arr[i].mood)
-		fmt.Printf("Progress: %s,", arr[i].progress)
+		fmt.Printf("Pencapaian #%d\n", i+1)
+		fmt.Printf("Nama Pekerja: %s\n", arr[i].namaPekerja)
+		fmt.Printf("Nama Tugas: %s\n", arr[i].namaTugas)
+		fmt.Printf("Mood: %s\n", arr[i].mood)
+		fmt.Printf("Progress: %s\n", arr[i].progress)
 		fmt.Printf("Skor Stress: %d\n", arr[i].skorStress)
 	}
 }

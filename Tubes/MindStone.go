@@ -27,24 +27,44 @@ func TambahPencapaian(arr *[NMAX]pekerja, jumlah *int) {
 		return 
 	}else if *jumlah < NMAX {
 		fmt.Println("Masukkan data pencapaian baru:")
-		fmt.Print("nama pekerja	: ")
+		fmt.Print("nama pekerja		: ")
 		fmt.Scan(&arr[*jumlah].namaPekerja)
-		fmt.Print("nama tugas	: ")
+		fmt.Print("nama tugas		: ")
 		fmt.Scan(&arr[*jumlah].namaTugas)
-		fmt.Print("mood		: ")
+		fmt.Print("mood bagus-jelek(1-10)	: ")
 		fmt.Scan(&arr[*jumlah].mood)
-		fmt.Print("progress	: ")
+		fmt.Print("progress		: ")
 		fmt.Scan(&arr[*jumlah].progress)
-		fmt.Print("skor stress	: ")
+		fmt.Print("skor stress		: ")
 		fmt.Scan(&arr[*jumlah].skorStress)
-		fmt.Print("hari deadline	: ")
+		fmt.Print("hari deadline		: ")
 		fmt.Scan(&arr[*jumlah].deadline.hari)
-		fmt.Print("bulan deadline	: ")
+		fmt.Print("bulan deadline		: ")
 		fmt.Scan(&arr[*jumlah].deadline.bulan)
-		fmt.Print("tahun deadline	: ")
+		fmt.Print("tahun deadline		: ")
 		fmt.Scan(&arr[*jumlah].deadline.tahun)
 		fmt.Println()
 		*jumlah++
+	}
+}
+func Moodtostring(mood int) string {
+	switch mood {
+		case 1:
+			return "sangat bagus"
+		case 2, 3:
+			return "bagus"
+		case 4:
+			return "cukup bagus"
+		case 5:
+			return "biasa saja"
+		case 6, 7:
+			return "cukup jelek"
+		case 8, 9:
+			return "jelek"
+		case 10:
+			return "sangat jelek"
+		default:
+			return "mood tidak valid"
 	}
 }
 
@@ -58,7 +78,7 @@ func OutputPencapaian(arr *[NMAX]pekerja, jumlah *int) {
 		fmt.Printf("Pencapaian #%d\n", i+1)
 		fmt.Printf("Nama Pekerja	: %s\n", arr[i].namaPekerja)
 		fmt.Printf("Nama Tugas	: %s\n", arr[i].namaTugas)
-		fmt.Printf("Mood		: %d%%\n", arr[i].mood)
+		fmt.Printf("Mood		: %s\n", Moodtostring(arr[i].mood))
 		fmt.Printf("Progress	: %d%%\n", arr[i].progress)
 		fmt.Printf("Skor Stress	: %d\n", arr[i].skorStress)
 		fmt.Printf("Deadline	: %02d/%02d/%04d\n", arr[i].deadline.hari, arr[i].deadline.bulan, arr[i].deadline.tahun)
@@ -259,7 +279,7 @@ func CariBerdasarkanTugas(arr *[NMAX]pekerja, jumlah int) {
 			fmt.Println ("Pencapaian ditemukan:")
 			fmt.Println ("nama		:", arr[i].namaPekerja)
 			fmt.Println ("tugas		:", arr[i].namaTugas)
-			fmt.Println ("mood		:", arr[i].mood)
+			fmt.Println ("mood		:", Moodtostring(arr[i].mood))
 			fmt.Println ("progress	:", arr[i].progress,"%")
 			fmt.Println ("skor stress	:", arr[i].skorStress)
 			fmt.Printf("deadline	: %02d/%02d/%04d\n", arr[i].deadline.hari, arr[i].deadline.bulan, arr[i].deadline.tahun)
@@ -293,7 +313,7 @@ func CariBerdasarkanDeadline(arr *[NMAX]pekerja, jumlah int) {
 			fmt.Println("Pencapaian ditemukan:")
 			fmt.Println("nama		:", arr[i].namaPekerja)
 			fmt.Println("tugas		:", arr[i].namaTugas)
-			fmt.Println("mood		:", arr[i].mood)
+			fmt.Println("mood		:", Moodtostring(arr[i].mood))
 			fmt.Println("progress	:", arr[i].progress,"%")
 			fmt.Println("skor stress	:", arr[i].skorStress)
 			fmt.Printf("deadline	: %02d/%02d/%04d\n", arr[i].deadline.hari, arr[i].deadline.bulan, arr[i].deadline.tahun)

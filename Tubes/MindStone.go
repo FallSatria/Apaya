@@ -26,21 +26,22 @@ func TambahPencapaian(arr *[NMAX]pekerja, jumlah *int) {
 		fmt.Println()
 		return 
 	}else if *jumlah < NMAX {
-		fmt.Print("Masukan nama pekerja: ")
+		fmt.Println("Masukkan data pencapaian baru:")
+		fmt.Print("nama pekerja	: ")
 		fmt.Scan(&arr[*jumlah].namaPekerja)
-		fmt.Print("Masukan nama tugas: ")
+		fmt.Print("nama tugas	: ")
 		fmt.Scan(&arr[*jumlah].namaTugas)
-		fmt.Print("Masukan mood: ")
+		fmt.Print("mood		: ")
 		fmt.Scan(&arr[*jumlah].mood)
-		fmt.Print("Masukan progress: ")
+		fmt.Print("progress	: ")
 		fmt.Scan(&arr[*jumlah].progress)
-		fmt.Print("Masukan skor stress: ")
+		fmt.Print("skor stress	: ")
 		fmt.Scan(&arr[*jumlah].skorStress)
-		fmt.Print("Masukan hari deadline: ")
+		fmt.Print("hari deadline	: ")
 		fmt.Scan(&arr[*jumlah].deadline.hari)
-		fmt.Print("Masukan bulan deadline: ")
+		fmt.Print("bulan deadline	: ")
 		fmt.Scan(&arr[*jumlah].deadline.bulan)
-		fmt.Print("Masukan tahun deadline: ")
+		fmt.Print("tahun deadline	: ")
 		fmt.Scan(&arr[*jumlah].deadline.tahun)
 		fmt.Println()
 		*jumlah++
@@ -55,12 +56,12 @@ func OutputPencapaian(arr *[NMAX]pekerja, jumlah *int) {
 	}
 	for i := 0; i < *jumlah; i++ {
 		fmt.Printf("Pencapaian #%d\n", i+1)
-		fmt.Printf("Nama Pekerja: %s\n", arr[i].namaPekerja)
-		fmt.Printf("Nama Tugas: %s\n", arr[i].namaTugas)
-		fmt.Printf("Mood: %d%%\n", arr[i].mood)
-		fmt.Printf("Progress: %d%%\n", arr[i].progress)
-		fmt.Printf("Skor Stress: %d\n", arr[i].skorStress)
-		fmt.Printf("Deadline: %02d/%02d/%04d\n", arr[i].deadline.hari, arr[i].deadline.bulan, arr[i].deadline.tahun)
+		fmt.Printf("Nama Pekerja	: %s\n", arr[i].namaPekerja)
+		fmt.Printf("Nama Tugas	: %s\n", arr[i].namaTugas)
+		fmt.Printf("Mood		: %d%%\n", arr[i].mood)
+		fmt.Printf("Progress	: %d%%\n", arr[i].progress)
+		fmt.Printf("Skor Stress	: %d\n", arr[i].skorStress)
+		fmt.Printf("Deadline	: %02d/%02d/%04d\n", arr[i].deadline.hari, arr[i].deadline.bulan, arr[i].deadline.tahun)
 		fmt.Println()
 	}
 }
@@ -81,21 +82,21 @@ func UpdatePencapaian(arr *[NMAX]pekerja, jumlah *int) {
 		return 
 	}
 	fmt.Printf("Masukkan data baru untuk pencapaian nomor %d:\n", nomor)
-	fmt.Print("Nama Pekerja: ")
+	fmt.Print("Nama Pekerja	: ")
 	fmt.Scan(&arr[nomor-1].namaPekerja)
-	fmt.Print("Nama Tugas: ")
+	fmt.Print("Nama Tugas	: ")
 	fmt.Scan(&arr[nomor-1].namaTugas)
-	fmt.Print("Mood: ")
+	fmt.Print("Mood		: ")
 	fmt.Scan(&arr[nomor-1].mood)
-	fmt.Print("Progress: ")
+	fmt.Print("Progress	: ")
 	fmt.Scan(&arr[nomor-1].progress)
-	fmt.Print("Skor Stress: ")
+	fmt.Print("Skor Stress	: ")
 	fmt.Scan(&arr[nomor-1].skorStress)
-	fmt.Print("Hari Deadline: ")
+	fmt.Print("Hari Deadline	: ")
 	fmt.Scan(&arr[nomor-1].deadline.hari)
-	fmt.Print("Bulan Deadline: ")
+	fmt.Print("Bulan Deadline	: ")
 	fmt.Scan(&arr[nomor-1].deadline.bulan)
-	fmt.Print("Tahun Deadline: ")
+	fmt.Print("Tahun Deadline	: ")
 	fmt.Scan(&arr[nomor-1].deadline.tahun)
 	fmt.Println()
 }
@@ -259,7 +260,7 @@ func CariBerdasarkanTugas(arr *[NMAX]pekerja, jumlah int) {
 			fmt.Println ("nama		:", arr[i].namaPekerja)
 			fmt.Println ("tugas		:", arr[i].namaTugas)
 			fmt.Println ("mood		:", arr[i].mood)
-			fmt.Println ("progress	:", arr[i].progress)
+			fmt.Println ("progress	:", arr[i].progress,"%")
 			fmt.Println ("skor stress	:", arr[i].skorStress)
 			fmt.Printf("deadline	: %02d/%02d/%04d\n", arr[i].deadline.hari, arr[i].deadline.bulan, arr[i].deadline.tahun)
 			found = true
@@ -278,8 +279,13 @@ func CariBerdasarkanDeadline(arr *[NMAX]pekerja, jumlah int) {
 		return 
 	}
 	var hari, bulan, tahun int
-	fmt.Print("Masukkan hari bulan tahun deadline yang ingin dicari (dd/mm/yyyy): ")
-	fmt.Scan(&hari, &bulan, &tahun)
+	fmt.Println("Masukkan tanggal deadline yang ingin dicari:  ")
+	fmt.Print("Hari		: ")
+	fmt.Scan(&hari)
+	fmt.Print("Bulan		: ")
+	fmt.Scan(&bulan)
+	fmt.Print("Tahun		: ")
+	fmt.Scan(&tahun)
 	fmt.Println()
 	found := false
 	for i := 0; i < jumlah; i++ {
@@ -288,9 +294,10 @@ func CariBerdasarkanDeadline(arr *[NMAX]pekerja, jumlah int) {
 			fmt.Println("nama		:", arr[i].namaPekerja)
 			fmt.Println("tugas		:", arr[i].namaTugas)
 			fmt.Println("mood		:", arr[i].mood)
-			fmt.Println("progress	:", arr[i].progress)
+			fmt.Println("progress	:", arr[i].progress,"%")
 			fmt.Println("skor stress	:", arr[i].skorStress)
 			fmt.Printf("deadline	: %02d/%02d/%04d\n", arr[i].deadline.hari, arr[i].deadline.bulan, arr[i].deadline.tahun)
+			fmt.Println()
 			found = true
 		}
 	}

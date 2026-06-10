@@ -4,12 +4,19 @@ import "fmt"
 const NMAX = 100
 var data [NMAX]int
 
+type waktu struct{
+	hari int
+	bulan int
+	tahun int
+}
+
 type pekerja struct {
 	namaPekerja string
 	namaTugas string
-	mood string
-	progress string
+	mood int
+	progress int
 	skorStress int
+	deadline waktu
 }
 
 
@@ -18,7 +25,22 @@ func TambahPencapaian(arr *[NMAX]pekerja, jumlah *int) {
 		fmt.Println("Data sudah penuh")
 		return 
 	}else if *jumlah < NMAX {
-		fmt.Scan(&arr[*jumlah].namaPekerja, &arr[*jumlah].namaTugas, &arr[*jumlah].mood, &arr[*jumlah].progress, &arr[*jumlah].skorStress)
+		fmt.Print("Masukan nama pekerja: ")
+		fmt.Scan(&arr[*jumlah].namaPekerja)
+		fmt.Print("Masukan nama tugas: ")
+		fmt.Scan(&arr[*jumlah].namaTugas)
+		fmt.Print("Masukan mood: ")
+		fmt.Scan(&arr[*jumlah].mood)
+		fmt.Print("Masukan progress: ")
+		fmt.Scan(&arr[*jumlah].progress)
+		fmt.Print("Masukan skor stress: ")
+		fmt.Scan(&arr[*jumlah].skorStress)
+		fmt.Print("Masukan hari deadline: ")
+		fmt.Scan(&arr[*jumlah].deadline.hari)
+		fmt.Print("Masukan bulan deadline: ")
+		fmt.Scan(&arr[*jumlah].deadline.bulan)
+		fmt.Print("Masukan tahun deadline: ")
+		fmt.Scan(&arr[*jumlah].deadline.tahun)
 		*jumlah++
 	}
 }
@@ -32,9 +54,10 @@ func OutputPencapaian(arr *[NMAX]pekerja, jumlah *int) {
 		fmt.Printf("Pencapaian #%d\n", i+1)
 		fmt.Printf("Nama Pekerja: %s\n", arr[i].namaPekerja)
 		fmt.Printf("Nama Tugas: %s\n", arr[i].namaTugas)
-		fmt.Printf("Mood: %s\n", arr[i].mood)
-		fmt.Printf("Progress: %s\n", arr[i].progress)
+		fmt.Printf("Mood: %d%%\n", arr[i].mood)
+		fmt.Printf("Progress: %d%%\n", arr[i].progress)
 		fmt.Printf("Skor Stress: %d\n", arr[i].skorStress)
+		fmt.Printf("Deadline: %02d/%02d/%04d\n", arr[i].deadline.hari, arr[i].deadline.bulan, arr[i].deadline.tahun)
 	}
 }
 
@@ -51,7 +74,22 @@ func UpdatePencapaian(arr *[NMAX]pekerja, jumlah *int) {
 		return 
 	}
 	fmt.Printf("Masukkan data baru untuk pencapaian nomor %d:\n", nomor)
-	fmt.Scan(&arr[nomor-1].namaPekerja, &arr[nomor-1].namaTugas, &arr[nomor-1].mood, &arr[nomor-1].progress, &arr[nomor-1].skorStress)
+	fmt.Print("Nama Pekerja: ")
+	fmt.Scan(&arr[nomor-1].namaPekerja)
+	fmt.Print("Nama Tugas: ")
+	fmt.Scan(&arr[nomor-1].namaTugas)
+	fmt.Print("Mood: ")
+	fmt.Scan(&arr[nomor-1].mood)
+	fmt.Print("Progress: ")
+	fmt.Scan(&arr[nomor-1].progress)
+	fmt.Print("Skor Stress: ")
+	fmt.Scan(&arr[nomor-1].skorStress)
+	fmt.Print("Hari Deadline: ")
+	fmt.Scan(&arr[nomor-1].deadline.hari)
+	fmt.Print("Bulan Deadline: ")
+	fmt.Scan(&arr[nomor-1].deadline.bulan)
+	fmt.Print("Tahun Deadline: ")
+	fmt.Scan(&arr[nomor-1].deadline.tahun)
 }
 
 func HapusPencapaian(arr *[NMAX]pekerja, jumlah *int) {
@@ -73,6 +111,110 @@ func HapusPencapaian(arr *[NMAX]pekerja, jumlah *int) {
 	*jumlah--
 }
 
+func UrutkanMoodTertinggi(arr *[NMAX]pekerja, jumlah int){
+	if jumlah <= 1{
+		fmt.Println("Data tidak cukup untuk diurutkan")
+		return 
+	}
+	salinan := *arr
+
+	for i := 0; i < jumlah-1; i++ {
+		idxMax := i
+		for j := i + 1; j < jumlah; j++ {
+			if salinan[j].mood > salinan[idxMax].mood {
+				idxMax = j
+			}
+		}
+		if idxMax != i {
+			salinan[i], salinan[idxMax] = salinan[idxMax], salinan[i]
+		}
+	}
+	fmt.Println("HASIL URUTAN BERDASARKAN MOOD PALING TINGGI")
+	OutputPencapaian(&salinan, &jumlah)
+}
+
+func UrutkanMoodInsertion(arr *[NMAX]pekerja, jumlah int) {
+	if jumlah <= 1{
+		fmt.Println("Data tidak cukup untuk diurutkan")
+		return 
+	}	
+	salinan := *arr
+	for i := 1; i < jumlah; i++ {
+		key := salinan[i]
+		j := i - 1
+		for j >= 0 && salinan[j].mood > key.mood {
+			salinan[j+1] = salinan[j]
+			j--
+		}
+		salinan[j+1] = key
+	}
+	fmt.Println("HASIL URUTAN BERDASARKAN MOOD PALING RENDAH")
+	OutputPencapaian(&salinan, &jumlah)
+}
+
+func DuluanGaNih(A waktu, B waktu) bool {
+	if A.tahun != B.tahun {
+		return A.tahun < B.tahun
+	}
+	if A.bulan != B.bulan {
+		return A.bulan < B.bulan
+	}
+	return A.hari < B.hari
+}
+
+func UrutkanDeadlineTerdekat(arr *[NMAX]pekerja, jumlah int) {
+	if jumlah <= 1{
+		fmt.Println("Data tidak cukup untuk diurutkan")
+		return 
+	}
+
+	salinan := *arr
+	
+	for i := 1; i < jumlah; i++ {
+		key := salinan[i]
+		j := i - 1
+		for j >= 0 && DuluanGaNih(key.deadline, salinan[j].deadline) {
+			salinan[j+1] = salinan[j]
+			j--
+		}
+		salinan[j+1] = key
+	}
+	fmt.Println("HASIL URUTAN BERDASARKAN DEADLINE PALING DEKAT")
+	OutputPencapaian(&salinan, &jumlah)
+}
+
+func BelakanganAjaLah(A waktu, B waktu) bool {
+	if A.tahun != B.tahun {
+		return A.tahun > B.tahun
+	}
+	if A.bulan != B.bulan {
+		return A.bulan > B.bulan
+	}
+	return A.hari > B.hari
+}
+
+func UrutkanDeadlineTerjauh(arr *[NMAX]pekerja, jumlah int) {
+	if jumlah <= 1{
+		fmt.Println("Data tidak cukup untuk diurutkan")
+		return 
+	}
+
+	salinan := *arr
+	for i := 0; i < jumlah-1; i++ {
+		idxMin := i
+		for j := i + 1; j < jumlah; j++ {
+			if BelakanganAjaLah(salinan[j].deadline, salinan[idxMin].deadline) {
+				idxMin = j
+			}
+		}
+		if idxMin != i {
+			salinan[i], salinan[idxMin] = salinan[idxMin], salinan[i]
+		}
+	}
+	fmt.Println("HASIL URUTAN BERDASARKAN DEADLINE PALING JAUH")
+	OutputPencapaian(&salinan, &jumlah)
+}
+
 func main() {
 	var pilihan int
 	var data [NMAX]pekerja
@@ -84,18 +226,50 @@ func main() {
 		fmt.Println("2. Lihat Pencapaian")
 		fmt.Println("3. Update Pencapaian")
 		fmt.Println("4. Hapus Pencapaian")
+		fmt.Println("5. Urutkan Mood")
+		fmt.Println("6. Urutkan Deadline")
 		fmt.Println("0. Keluar")
 		fmt.Print("Pilih menu: ")
 		fmt.Scan(&pilihan)
 		switch pilihan {
 			case 1:
-				TambahPencapaian(&data, &jumlahData)
+				TambahPencapaian(&data, &jumlahData) 
 			case 2:
 				OutputPencapaian(&data, &jumlahData)
 			case 3:
 				UpdatePencapaian(&data, &jumlahData)
 			case 4:
 				HapusPencapaian(&data, &jumlahData)	
+			case 5:
+				var subPilihan int
+				fmt.Println("==Opsi Urutan Mood==")
+				fmt.Println("1. Mood Tertinggi(Selection)")
+				fmt.Println("2. Mood Terendah(Insertion)")
+				fmt.Print("Pilih opsi: ")
+				fmt.Scan(&subPilihan)
+				switch subPilihan {
+					case 1:
+						UrutkanMoodTertinggi(&data, jumlahData)
+					case 2:
+						UrutkanMoodInsertion(&data, jumlahData)
+					default:
+						fmt.Println("Opsi tidak valid")
+				}
+			case 6:
+				var subPilihan int
+				fmt.Println("==Opsi Urutan Deadline==")
+				fmt.Println("1. Deadline Terdekat(Insertion)")
+				fmt.Println("2. Deadline Terjauh(Selection)")
+				fmt.Print("Pilih opsi: ")
+				fmt.Scan(&subPilihan)
+				switch subPilihan {
+					case 1:
+						UrutkanDeadlineTerdekat(&data, jumlahData)
+					case 2:
+						UrutkanDeadlineTerjauh(&data, jumlahData)
+					default:
+						fmt.Println("Opsi tidak valid")
+				}
 			case 0:
 				return
 			default:

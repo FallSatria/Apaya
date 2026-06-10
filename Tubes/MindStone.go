@@ -242,6 +242,64 @@ func UrutkanDeadlineTerjauh(arr *[NMAX]pekerja, jumlah int) {
 	OutputPencapaian(&salinan, &jumlah)
 }
 
+func CariBerdasarkanTugas(arr *[NMAX]pekerja, jumlah int) {
+	if jumlah == 0 {
+		fmt.Println("Belum ada data pencapaian")
+		fmt.Println()
+		return 
+	}
+	var keyword string
+	fmt.Print("Masukkan nama tugas yang ingin dicari: ")
+	fmt.Scan(&keyword)
+	fmt.Println()
+	found := false
+	for i := 0; i < jumlah; i++ {
+		if arr[i].namaTugas == keyword {
+			fmt.Println ("Pencapaian ditemukan:")
+			fmt.Println ("nama		:", arr[i].namaPekerja)
+			fmt.Println ("tugas		:", arr[i].namaTugas)
+			fmt.Println ("mood		:", arr[i].mood)
+			fmt.Println ("progress	:", arr[i].progress)
+			fmt.Println ("skor stress	:", arr[i].skorStress)
+			fmt.Printf("deadline	: %02d/%02d/%04d\n", arr[i].deadline.hari, arr[i].deadline.bulan, arr[i].deadline.tahun)
+			found = true
+		}
+	}
+	if !found {
+		fmt.Println("Tugas tidak ditemukan")
+	}
+	fmt.Println()
+}
+
+func CariBerdasarkanDeadline(arr *[NMAX]pekerja, jumlah int) {
+	if jumlah == 0 {
+		fmt.Println("Belum ada data pencapaian")
+		fmt.Println()
+		return 
+	}
+	var hari, bulan, tahun int
+	fmt.Print("Masukkan hari bulan tahun deadline yang ingin dicari (dd/mm/yyyy): ")
+	fmt.Scan(&hari, &bulan, &tahun)
+	fmt.Println()
+	found := false
+	for i := 0; i < jumlah; i++ {
+		if arr[i].deadline.hari == hari && arr[i].deadline.bulan == bulan && arr[i].deadline.tahun == tahun {
+			fmt.Println("Pencapaian ditemukan:")
+			fmt.Println("nama		:", arr[i].namaPekerja)
+			fmt.Println("tugas		:", arr[i].namaTugas)
+			fmt.Println("mood		:", arr[i].mood)
+			fmt.Println("progress	:", arr[i].progress)
+			fmt.Println("skor stress	:", arr[i].skorStress)
+			fmt.Printf("deadline	: %02d/%02d/%04d\n", arr[i].deadline.hari, arr[i].deadline.bulan, arr[i].deadline.tahun)
+			found = true
+		}
+	}
+	if !found {
+		fmt.Println("Deadline tidak ditemukan")
+	}
+	fmt.Println()
+}
+
 func main() {
 	var pilihan int
 	var data [NMAX]pekerja
@@ -255,6 +313,7 @@ func main() {
 		fmt.Println("4. Hapus Pencapaian")
 		fmt.Println("5. Urutkan Mood")
 		fmt.Println("6. Urutkan Deadline")
+		fmt.Println("7. Cari Berdasarkan...")
 		fmt.Println("0. Keluar")
 		fmt.Print("Pilih menu: ")
 		fmt.Scan(&pilihan) 
@@ -298,6 +357,23 @@ func main() {
 						UrutkanDeadlineTerdekat(&data, jumlahData)
 					case 2:
 						UrutkanDeadlineTerjauh(&data, jumlahData)
+					default:
+						fmt.Println("Opsi tidak valid")
+						fmt.Println()
+				}
+			case 7:
+				var subPilihan int
+				fmt.Println("==Opsi Cari Berdasarkan==")
+				fmt.Println("1. tugas")
+				fmt.Println("2. tanggal deadline")
+				fmt.Print("Pilih opsi: ")
+				fmt.Scan(&subPilihan)
+				fmt.Println()
+				switch subPilihan {
+					case 1:
+						CariBerdasarkanTugas(&data, jumlahData)
+					case 2:
+						CariBerdasarkanDeadline(&data, jumlahData)
 					default:
 						fmt.Println("Opsi tidak valid")
 						fmt.Println()

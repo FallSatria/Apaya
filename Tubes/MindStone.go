@@ -364,7 +364,7 @@ func main() {
 			case 7:
 				var subPilihan int
 				fmt.Println("==Opsi Cari Berdasarkan==")
-				fmt.Println("1. tugas")
+				fmt.Println("1. nama tugas")
 				fmt.Println("2. tanggal deadline")
 				fmt.Print("Pilih opsi: ")
 				fmt.Scan(&subPilihan)

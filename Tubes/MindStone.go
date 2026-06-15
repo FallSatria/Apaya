@@ -151,7 +151,7 @@ func HapusPencapaian(arr *[NMAX]pekerja, jumlah *int) {
 	*jumlah--
 }
 
-func UrutkanMoodTertinggi(arr *[NMAX]pekerja, jumlah int){
+func UrutkanMoodSelection(arr *[NMAX]pekerja, jumlah int){
 	if jumlah <= 1{
 		fmt.Println("Data tidak cukup untuk diurutkan")
 		fmt.Println()
@@ -162,7 +162,7 @@ func UrutkanMoodTertinggi(arr *[NMAX]pekerja, jumlah int){
 	for i := 0; i < jumlah-1; i++ {
 		idxMax := i
 		for j := i + 1; j < jumlah; j++ {
-			if salinan[j].mood > salinan[idxMax].mood {
+			if salinan[j].mood < salinan[idxMax].mood {
 				idxMax = j
 			}
 		}
@@ -185,7 +185,7 @@ func UrutkanMoodInsertion(arr *[NMAX]pekerja, jumlah int) {
 	for i := 1; i < jumlah; i++ {
 		key := salinan[i]
 		j := i - 1
-		for j >= 0 && salinan[j].mood > key.mood {
+		for j >= 0 && salinan[j].mood < key.mood {
 			salinan[j+1] = salinan[j]
 			j--
 		}
@@ -327,6 +327,77 @@ func CariBerdasarkanDeadline(arr *[NMAX]pekerja, jumlah int) {
 	fmt.Println()
 }
 
+func CariBerdasarkanTugasBinary(arr *[NMAX]pekerja, jumlah int){
+	if jumlah == 0 {
+		fmt.Println("Belum ada data pencapaian")
+		return
+	}
+	var keyword string
+	fmt.Println("Masukan tanggal tugas yang ingin dicari: ")
+	fmt.Scan(&keyword)
+	salinan := *arr
+	for i := 1; i < jumlah; i++ {
+		key := salinan[i]
+		j := i - 1
+		for j >= 0 && salinan[j].namaTugas > key.namaTugas {
+			salinan[j+1] = salinan[j]
+			j--
+		} 
+		salinan[j+1] = key
+	}
+	kiri := 0
+	kanan := jumlah - 1
+	found := false
+
+	for kiri <= kanan {
+		tengah := (kiri + kanan) / 2
+
+		if salinan[tengah].namaTugas == keyword {
+			
+		}
+	}
+}
+
+func TampilkanStatistikPencapaian(arr *[NMAX]pekerja, jumlah int) {
+	if jumlah == 0 {
+		fmt.Println("Belum ada data pencapaian")
+		return
+	}
+	totalStress := 0
+	jumlahSelesai := 0
+
+	fmt.Println("===LAPORAN & STATISTIK MINDSTONE===")
+	fmt.Println("Daftar Tugas yang Sudah selesai:")
+	for i := 0; i < jumlah; i++ {
+		totalStress += arr[i].skorStress
+		if arr[i].progress == 100 {
+			jumlahSelesai++
+			fmt.Printf("- Tugas : %s (Dikerjakan oleh %s)\n", arr[i].namaPekerja, arr[i].namaTugas)
+		}
+	}
+
+	if jumlahSelesai == 0 {
+		fmt.Println("Belum ada tugas yang selesai")
+	}
+	rataRataStress := float64(totalStress) / float64(jumlah)
+	persentaseSelesai := (float64(jumlahSelesai) / float64(jumlah)) * 100
+
+	fmt.Printf("Rata-rata Stress: %.2f\n",rataRataStress)
+	fmt.Printf("Jumlah Tugas Selesai: %.2f%%\n", persentaseSelesai)
+
+	fmt.Println("Catatan Evaluasi Tim: ")
+	if persentaseSelesai == 100 {
+		fmt.Println("Luar biasa! Tugas Selesai 100%")
+	} else if rataRataStress >= 7.0 {
+		fmt.Println("Tingkat stress tinggi, perlu penanganan lebih lanjut")
+	} else if persentaseSelesai >= 50.0 {
+		fmt.Println("Progress baik, 50% dari tugas sudah selesai")
+	} else {
+		fmt.Println("Perlu peningkatan, sebagian besar tugas belum selesai")
+	}
+
+}
+
 func main() {
 	var pilihan int
 	var data [NMAX]pekerja
@@ -364,7 +435,7 @@ func main() {
 				fmt.Println()
 				switch subPilihan {
 					case 1:
-						UrutkanMoodTertinggi(&data, jumlahData)
+						UrutkanMoodSelection(&data, jumlahData)
 					case 2:
 						UrutkanMoodInsertion(&data, jumlahData)
 					default:

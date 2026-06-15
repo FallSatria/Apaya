@@ -1,148 +1,171 @@
 package main
 
 import "fmt"
-
-var seed uint32 = 123456789
-
-func angkaAcak() int {
-	seed = (1103515245*seed + 12345) % 2147483648
-	return int(seed)
+type Domino struct {
+	sisi1 int  
+	sisi2 int  
+	nilai int  
+	balak bool 
 }
-
-type domino struct {
-	sisi1 int
-	sisi2 int
-	Nilai int
-	Balak bool
-}
-
 type Dominoes struct {
-	kartu [28]domino
-	Sisa int
+	kartu   [28]Domino 
+	tersisa int        
 }
 
-func InitDominoes() *Dominoes {
-	d := &Dominoes{}
-	index := 0
-	for i := 0: i <=6 ; i++ {
+func InisialisasiDomino(d *Dominoes) {
+	idx := 0
+	for i := 0; i <= 6; i++ {
 		for j := i; j <= 6; j++ {
-			d.kartu[index] = Domino{
+			d.kartu[idx] = Domino{
 				sisi1: i,
 				sisi2: j,
-				Nilai: i + j,
-				Balak: i == j,
+				nilai: i + j,
+				balak: i == j,
 			}
-			index++
-		
-			
+			idx++
 		}
 	}
-	d.Sisa = 28
-	return d
+	d.tersisa = 28
 }
 
 func kocokKartu(d *Dominoes) {
-	for i := d.Sisa - 1; i > 0; i-- {
-		j := angkaAcak() % (i + 1)
+	if d.tersisa <= 1 {
+		return
+	}
+	
+	seed := 12345
+	
+	for i := 0; i < d.tersisa; i++ {
+		seed = (seed*1103515245 + 12345) % 2147483648
+		j := seed % d.tersisa 
+		if j < 0 {
+			j = -j
+		}
 		d.kartu[i], d.kartu[j] = d.kartu[j], d.kartu[i]
 	}
 }
-
-func ambilKartu(d *Dominoes) domino {
-	if d.Sisa <= 0 {
+func ambilKartu(d *Dominoes) Domino {
+	if d.tersisa == 0 {
 		return Domino{} 
 	}
-	kartu := d.kartu[d.Sisa-1]
-	d.Sisa--
-	return kartu
+	kartuYangDiambil := d.kartu[d.tersisa-1]
+	d.tersisa--
+	return kartuYangDiambil
 }
-
-func nilaiKartu(d domino) int {
-	return d.Nilai
+func gambarKartu(d Domino, suit int) int {
+	if suit == 1 {
+		return d.sisi1
+	}
+	return d.sisi2
 }
-
-func galiKartu(d domino) int {
-	retrun d.Nilai
+func nilaiKartu(d Domino) int {
+	return d.nilai
 }
-
-func galiKartu(d *dominoes, target Domino) int {
-	for d.Sisa > 0 {
-		kartu := ambilKartu(d)
-		if kartu.sisi1 == target.sisi1 || kartu.sisi1 == target.sisi2 {
-			kartu.sisi2 == target.sisi1 || kartu.sisi2 == target.sisi2 {
-				return kartu
+func galiKartu(d *Dominoes, patokan Domino) Domino {
+	for d.tersisa > 0 {
+		k := ambilKartu(d)
+		if k.sisi1 == patokan.sisi1 || k.sisi1 == patokan.sisi2 ||
+			k.sisi2 == patokan.sisi1 || k.sisi2 == patokan.sisi2 {
+			return k
 		}
 	}
-	return Domino{}
+	return Domino{} 
 }
-
-func sepasangKartu(d1 domino, d2 domino) bool {
-	return (nilaiKartu(d1) + nilaiKartu(d2)) == 12
+func sepasangKartu(d1 Domino, d2 Domino) bool {
+	return (d1.nilai + d2.nilai) == 12
 }
-
-type MesinKarakter struct {
-	Pita string
-	Posisi int
-	Karakter string
-}
-
-func (m *MesinKarakter) start(input string) {
-	m.Pita = input
-	m.Posisi = 0
-	if len(m.Pita) > 0 {
-		m.Karakter = string(m.Pita[m.Posisi])
+var (
+	pitaKarakter string
+	indeks       int
+	currentChar  byte
+)
+func start(input string) {
+	pitaKarakter = input
+	indeks = 0
+	if len(pitaKarakter) > 0 {
+		currentChar = pitaKarakter[indeks]
 	}
-} 
-
-func (m *MesinKarakter) next() {
-	m.Posisi++
-	if m.Posisi < len(m.Pita) {
-		m.Karakter = string(m.Pita[m.Posisi])
-	} 
 }
-
-func (m *MesinKarakter) isEnd() bool {
-	if m.Posisi >= len(m.Pita) {
+func maju() {
+	if !eop() {
+		indeks++
+		if indeks < len(pitaKarakter) {
+			currentChar = pitaKarakter[indeks]
+		}
+	}
+}
+func eop() bool {
+	if indeks >= len(pitaKarakter) {
 		return true
 	}
-	return string(m.Pita[m.Posisi]) == "."
+	return pitaKarakter[indeks] == '.'
 }
-
-func jalankanAnalisis(input string) {
-	mesin := &MesinKarakter{}
-	mesin.start(input)
+func cc() byte {
+	return currentChar
+}
+func prosesMesinKarakter(input string) {
+	start(input)
 
 	totalKarakter := 0
-	totalA := 0
-	totalLE := 0
+	jumlahA := 0
+	jumlahLE := 0
 
-	karakterSebelumnya := ""
-
-	for !mesin.isEnd() {
-		cc := mesin.cc()
+	var prevChar byte = 0
+	for !eop() {
+		c := cc()
 		totalKarakter++
-
-		if cc == "A" {
-			totalA++
+		if c == 'A' {
+			jumlahA++
+		}
+		if prevChar == 'L' && c == 'E' {
+			jumlahLE++
 		}
 
-		if karakterSebelumnya == "L" && cc == "E" {
-			totalLE++
-		}
-
-		karakterSebelumnya = cc
-		mesin.next()
+		prevChar = c
+		maju()
 	}
-
-	frekuensiA := 0
+	frekuensiA := 0.0
 	if totalKarakter > 0 {
-		frekuensiA = (totalA * 100) / totalKarakter
+		frekuensiA = float64(jumlahA) / float64(totalKarakter)
 	}
-	fmt.Printf("Pita Dibaca: %s\n", input)
-	fmt.Printf("Total Karakter: %d\n", totalKarakter)
-	fmt.Printf("Jumlah A: %d\n", totalA)
-	fmt.Printf("Frekuensi A: %d%%\n", frekuensiA)
-	fmt.Printf("Jumlah LE: %d\n", totalLE)
 
+	fmt.Println("--- Hasil Mesin Karakter ---")
+	fmt.Printf("Teks Input          : %s\n", input)
+	fmt.Printf("Total karakter      : %d\n", totalKarakter)
+	fmt.Printf("Total huruf 'A'     : %d\n", jumlahA)
+	// Cetak float menggunakan fmt
+	fmt.Printf("Frekuensi huruf 'A' : %f\n", frekuensiA) 
+	fmt.Printf("Total kata 'LE'     : %d\n", jumlahLE)
 }
 
+func main() {
+	// --- Simulasi Domino ---
+	fmt.Println("=== SIMULASI MESIN DOMINO ===")
+	var setDomino Dominoes
+	InisialisasiDomino(&setDomino)
+	
+	fmt.Printf("Jumlah kartu awal: %d\n", setDomino.tersisa)
+	kocokKartu(&setDomino)
+	
+	kartu1 := ambilKartu(&setDomino)
+	fmt.Printf("Ambil Kartu 1: (%d, %d) | Nilai: %d | Balak: %t\n", 
+		gambarKartu(kartu1, 1), gambarKartu(kartu1, 2), nilaiKartu(kartu1), kartu1.balak)
+
+	kartu2 := ambilKartu(&setDomino)
+	fmt.Printf("Ambil Kartu 2: (%d, %d) | Nilai: %d | Balak: %t\n", 
+		gambarKartu(kartu2, 1), gambarKartu(kartu2, 2), nilaiKartu(kartu2), kartu2.balak)
+
+	isDuaBelas := sepasangKartu(kartu1, kartu2)
+	fmt.Printf("Apakah total kedua kartu 12? %t\n", isDuaBelas)
+
+	fmt.Printf("Mencari kartu (gali) yang cocok dengan (%d, %d)...\n", kartu1.sisi1, kartu1.sisi2)
+	kartuCocok := galiKartu(&setDomino, kartu1)
+	if kartuCocok.nilai != 0 || (kartuCocok.sisi1 == 0 && kartuCocok.sisi2 == 0) {
+		fmt.Printf("Ditemukan kartu cocok: (%d, %d)\n", kartuCocok.sisi1, kartuCocok.sisi2)
+	}
+	fmt.Printf("Sisa kartu domino: %d\n\n", setDomino.tersisa)
+
+	fmt.Println("=== SIMULASI MESIN KARAKTER ===")
+	teks := "HALO ALAM LELE BERLEBIHAN."
+	prosesMesinKarakter(teks)
+}

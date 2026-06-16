@@ -450,10 +450,34 @@ func CariBerdasarkanDeadlineBinary(arr *[NMAX]pekerja, jumlah int) {
 
 }
 
+func RataRataStressMingguan(arr *[NMAX]pekerja, jumlah int) float64 {
+	if jumlah == 0 {
+		fmt.Println("Belum ada data pencapaian")
+		return 0.0
+	}
+	totalStress := 0
+	minhari := arr[0].deadline.tahun*365 + arr[0].deadline.bulan*30 + arr[0].deadline.hari
+	maxhari := minhari
+	for i := 0; i < jumlah; i++ {
+		totalStress += arr[i].skorStress
+		carrhari := arr[i].deadline.tahun*365 + arr[i].deadline.bulan*30 + arr[i].deadline.hari
+		if carrhari < minhari {
+			minhari = carrhari
+		}
+		if carrhari > maxhari {
+			maxhari = carrhari
+		}
+	}
+	selisihHari := maxhari - minhari
+	jumlahMinggu := float64(selisihHari) / 7.0
+	rataRata := float64(totalStress) / float64(jumlahMinggu)
+	return rataRata
+}
+
 func TampilkanStatistikPencapaian(arr *[NMAX]pekerja, jumlah int) {
 	if jumlah == 0 {
 		fmt.Println("Belum ada data pencapaian")
-		return
+		return 
 	}
 	totalStress := 0
 	jumlahSelesai := 0
@@ -475,8 +499,11 @@ func TampilkanStatistikPencapaian(arr *[NMAX]pekerja, jumlah int) {
 	persentaseSelesai := (float64(jumlahSelesai) / float64(jumlah)) * 100
 
 	fmt.Printf("Rata-rata Stress		: %.2f\n", rataRataStress)
-	fmt.Printf("Jumlah Tugas Selesai	: %.2f%%\n", persentaseSelesai)
-
+	fmt.Printf("Jumlah Tugas Selesai		: %.2f%%\n", persentaseSelesai)
+	fmt.Println()
+	rataRataStressMingguan := RataRataStressMingguan(arr,jumlah)
+	fmt.Printf("Rata-rata Stress Mingguan	: %.2f\n", rataRataStressMingguan)
+	fmt.Println()
 	fmt.Print("Catatan Evaluasi: ")
 	if persentaseSelesai == 100 {
 		fmt.Println("Luar biasa! Tugas Selesai 100%")
@@ -486,6 +513,7 @@ func TampilkanStatistikPencapaian(arr *[NMAX]pekerja, jumlah int) {
 		fmt.Println("Progress baik, 50% ","dari tugas sudah selesai")
 	} else {
 		fmt.Println("Perlu peningkatan, sebagian besar tugas belum selesai")
+		
 	}
 	fmt.Println()
 
@@ -586,5 +614,4 @@ func main() {
 
 		}
 	}
-	
 }
